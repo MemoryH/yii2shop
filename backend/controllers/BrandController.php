@@ -8,6 +8,9 @@ use yii\web\UploadedFile;
 
 class BrandController extends \yii\web\Controller
 {
+
+    //解决防跨站攻击
+    public $enableCsrfValidation = false;
     //展示列表功能
     public function actionIndex()
     {
@@ -33,15 +36,9 @@ class BrandController extends \yii\web\Controller
             //保存数据
 
 
-            $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
+
             if ($model->validate()) {
-                $file = 'upload/' . date('Y-m-d');
-                if (!is_dir($file)) {
-                    mkdir($file, 0777, true);
-                }
-                $file = $file . '/' . uniqid() . '.' . $model->imgFile->extension;
-                $model->imgFile->saveAs(\Yii::getAlias('@webroot') .'/'. $file, 0);
-                $model->logo = $file;
+
                 $model->save();
                 //设置提示信息
                 \yii::$app->session->setFlash('success', '添加成功');
@@ -66,15 +63,7 @@ class BrandController extends \yii\web\Controller
             //保存数据
 
 
-            $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
             if ($model->validate()) {
-                $file = 'upload/' . date('Y-m-d');
-                if (!is_dir($file)) {
-                    mkdir($file, 0777, true);
-                }
-                $file = $file . '/' . uniqid() . '.' . $model->imgFile->extension;
-                $model->imgFile->saveAs(\Yii::getAlias('@webroot') .'/'. $file, 0);
-                $model->logo = $file;
                 $model->save();
                 //设置提示信息
                 \yii::$app->session->setFlash('success', '添加成功');
@@ -97,6 +86,27 @@ class BrandController extends \yii\web\Controller
         \Yii::$app->session->setFlash('success','删除成功');
         //跳转页面
         $this->redirect(['brand/index']);
+    }
+
+    //处理上传文件
+    public function actionLogo(){
+        //实例化上传文件类
+        $uploadFile = UploadedFile::getInstanceByName('file');
+        $file = '/upload/' . date('Y-m-d');
+        if (!is_dir($file)) {
+            mkdir($file, 0777, true);
+        }
+        $file = $file . '/' . uniqid() . '.' . $uploadFile->extension;
+        $result = $uploadFile->saveAs(\Yii::getAlias('@webroot') .'/'. $file, 0);
+        if ($result){
+            //文件保存成功 返回文件路径
+            return json_encode([
+                'url'=>$file
+            ]);
+
+        }
+
+
     }
 
 }

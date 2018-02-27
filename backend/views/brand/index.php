@@ -14,7 +14,7 @@
             <td><?=$brand->id?></td>
             <td><?=$brand->name?></td>
             <td><?=$brand->intro?></td>
-            <td><img src="/<?=$brand->logo?>" class="img-circle" width="30px"></td>
+            <td><img src="<?=$brand->logo?>" class="img-circle" width="30px"></td>
             <td><?=$brand->sort?></td>
             <td>
                 <?=\yii\helpers\Html::a('修改',['edit','id'=>$brand->id],['class'=>'btn btn-info'])?>
