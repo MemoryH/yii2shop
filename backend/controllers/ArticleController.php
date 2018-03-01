@@ -5,6 +5,10 @@ namespace backend\controllers;
 use backend\models\Article;
 use backend\models\ArticleDetail;
 use yii\data\Pagination;
+// 引入鉴权类
+use Qiniu\Auth;
+// 引入上传类
+use Qiniu\Storage\UploadManager;
 
 class ArticleController extends \yii\web\Controller
 {
@@ -110,8 +114,40 @@ class ArticleController extends \yii\web\Controller
         return [
             'upload' => [
                 'class' => 'kucha\ueditor\UEditorAction',
+                'config' => [
+                    "imageUrlPrefix"  => "http://admin.yii2shop.com",//图片访问路径前缀
+                    "imagePathFormat" => "/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}", //上传保存路径
+                    "imageRoot" => \Yii::getAlias("@webroot"),
+            ],
         ]
     ];
 }
+
+//测试七牛云
+    public function actionText(){
+
+// 需要填写你的 Access Key 和 Secret Key
+        $accessKey ="TxMyeDQ095vC5DtBNrUmE_PqD-Ds6I1mz3i__KJk";
+        $secretKey = "M69Cr5LgZCbmJrdmxqRfDl2qvdPYiZB8nZ6P9F7g";
+        $bucket = "yii2shop";
+        // 构建鉴权对象
+        $auth = new Auth($accessKey, $secretKey);
+        // 生成上传 Token
+        $token = $auth->uploadToken($bucket);
+        // 要上传文件的本地路径
+        $filePath = \Yii::getAlias('@webroot').'/upload/image/20180227/1.jpg';
+        // 上传到七牛后保存的文件名
+        $key = '/upload/20180227/1.jpg';
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+        // 调用 UploadManager 的 putFile 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+//        echo "\n====> putFile result: \n";
+        if ($err !== null) {
+            var_dump($err);
+        } else {
+            var_dump($ret);
+        }
+            }
 
 }
