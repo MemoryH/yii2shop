@@ -1,12 +1,6 @@
 <?php
-/**
- * @var $this \yii\web\View
- */
+//==================文件上传==============================
 $form = \yii\bootstrap\ActiveForm::begin();
-echo $form->field($model,'name')->textInput();
-echo $form->field($model,'intro')->textarea();
-echo $form->field($model,'logo')->hiddenInput();
-//================================================
 //引入css
 $this->registerCssFile('@web/webuploader/webuploader.css');
 
@@ -25,9 +19,9 @@ echo <<<HTML
 HTML;
 
 //文件接收地址
-$logo_url = \yii\helpers\Url::to(['brand/logo']);
+$logo_url = \yii\helpers\Url::to(['goods/logo']);
 $this->registerJs(
-  <<<JS
+    <<<JS
     // 初始化Web Uploader
 var uploader = WebUploader.create({
 
@@ -55,24 +49,36 @@ var uploader = WebUploader.create({
 // 文件上传成功，给item添加成功class, 用样式标记上传成功。
 uploader.on( 'uploadSuccess', function( file,response ) {
     
-    var imgFile = response.url
+    var imgFile = response.url;
     // console.log(imgFile);
-    $('#brand-logo').val(imgFile)
+    $('#goodsgallery-path').val(imgFile);
+    var id = $id;
+    var data = {
+      'path':imgFile,
+      'goods_id':id
+    };
+    $.post('psave.html',data,function(arr) {
+        
+    },'json');
     //图片回显
-    $('#img_logo').attr('src',imgFile);
-    $( '#'+file.id ).addClass('upload-state-done');
+   location.reload();
+
 });
+
+
 
 JS
 
 );
+echo "<a href='index.html' class='btn btn-primary'>返回</a>";
+foreach ($photos as $photo){
+    echo "<img id='img_logo' src=$photo->path >";
+    echo "<a href='photo-delete.html?id=$photo->id&&goods_id=$photo->goods_id' class='btn btn-danger'><span class='glyphicon glyphicon-trash'></span>删除</a>";
+    echo "<hr>";
+}
 
-echo "<img id='img_logo' src=$model->logo >";
 
 
+//==================文件上传==============================
 
-
-//=======================================================
-echo $form->field($model,'sort')->textInput();
-echo '<button type="submit" class="btn btn-primary">'.($model->getIsNewRecord()?'添加':'更新').'</button>';
 \yii\bootstrap\ActiveForm::end();

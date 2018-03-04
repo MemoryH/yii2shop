@@ -44,7 +44,7 @@ class GoodsCategoryController extends \yii\web\Controller
                 //设置提示信息
                 \Yii::$app->session->setFlash('success','添加成功');
                 //跳转页面
-                $this->redirect(['goods-category/index']);
+                return $this->redirect(['goods-category/index']);
             }
         }
         $nodes = GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
@@ -60,6 +60,8 @@ class GoodsCategoryController extends \yii\web\Controller
         //实例化表单模型
         $model = GoodsCategory::findOne(['id'=>$id]);
         if ($request->isPost){
+            //原来的parent_id
+            //$old_parent_id = $model->parent_id;
             $model->load($request->post());
             if ($model->validate()){
                 if ($model->parent_id){
@@ -67,12 +69,22 @@ class GoodsCategoryController extends \yii\web\Controller
                     $countries = GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($countries);
                 }else{
-                    $model->makeRoot();
+                    //顶级分类改为顶级分类会报错
+                    //旧的parent_id为0时改为新的parent_id为0
+                    //$new_parent_id = $model->parent_id;
+                    if($model->getOldAttribute('parent_id')==0){
+                        //顶级分类改为顶级分类会报错
+                        $model->save();
+                    }else{
+                        $model->makeRoot();
+                    }
+
+
                 }
                 //设置提示信息
                 \Yii::$app->session->setFlash('success','添加成功');
                 //跳转页面
-                $this->redirect(['goods-category/index']);
+                return $this->redirect(['goods-category/index']);
             }
         }
         $nodes = GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
@@ -85,16 +97,28 @@ class GoodsCategoryController extends \yii\web\Controller
     public function actionDelete($id){
         //通过id查询
         $model = GoodsCategory::findOne(['id'=>$id]);
-        $model->delete();
+        //通过delete方法删除根节点时报错
+        if($model->parent_id){
+            $model->delete();
+        }else{
+            //删除根节点及旗下子节点
+            $nodes = GoodsCategory::find()->where(['parent_id'=>$model->id])->all();
+            if($nodes ==null){
+//                var_dump($nodes);exit;
+                $model->deleteWithChildren();
+            }else{
+//                echo 111;exit;
+                \Yii::$app->session->setFlash('warning','根节点不能为空');
+                return $this->redirect(['goods-category/index']);
+
+            }
+
+        }
+
         //设置提示信息
         \Yii::$app->session->setFlash('success','删除成功');
         //跳转
-        $this->redirect(['goods-category/index']);
+        return $this->redirect(['goods-category/index']);
     }
 
-    //测试ztree
-    public function actionZtree(){
-
-        return $this->render('ztree');
-    }
 }
