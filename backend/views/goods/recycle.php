@@ -30,7 +30,7 @@
         <th>操作</th>
     </tr>
     <?php foreach ($goods as $good): ?>
-        <tr>
+        <tr delete-id=<?= $good->id ?>>
             <td><?= $good->id ?></td>
             <td><?= $good->sn ?></td>
             <td><?= $good->name ?></td>
@@ -39,7 +39,7 @@
             <td><img src="<?= $good->logo ?>" class="img-circle" width="30px"></td>
             <td>
 
-                <a class="btn btn-success" href="recovery.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-film"></span>恢复</a>
+                <a class="btn btn-success delete" href="#"><span class="glyphicon glyphicon-film"></span>恢复</a>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -51,3 +51,28 @@
 echo \yii\widgets\LinkPager::widget([
     'pagination' => $page
 ]);
+
+$this->registerJs(
+    <<<JS
+    $('.delete').click(function() {
+       
+    if(confirm("真的要恢复吗?")){
+    var tr = $(this).closest('tr');
+      var id = $(this).closest('tr').attr('delete-id');
+    var data = {
+      'id':id
+    };
+      $.post('recovery.html',data,function(arr) {
+        if (arr.status ==0){
+            tr.remove();
+        }
+    },'json');
+  }
+  else{
+  
+  }
+  
+    })
+JS
+
+);

@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use app\models\Brand;
+use backend\filters\RbacFilter;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
 use yii\web\UploadedFile;
 // 引入鉴权类
 use Qiniu\Auth;
@@ -18,10 +20,11 @@ class BrandController extends \yii\web\Controller
     //展示列表功能
     public function actionIndex()
     {
+//        var_dump($this->uniqueId);exit;
         //实例化分页工具条
         $page = new Pagination();
         $page->totalCount = Brand::find()->count();
-        $page->defaultPageSize = 2;
+        $page->defaultPageSize = 10;
 
         //实例化活动记录
         $brands = Brand::find()->offset($page->offset)->where(['is_deleted'=>0])->limit($page->limit)->all();
@@ -82,14 +85,24 @@ class BrandController extends \yii\web\Controller
     }
 
     //品牌的删除
-    public function actionDelete($id){
+    public function actionDelete(){
+//实例化request组件
+        $request = \Yii::$app->request;
+        $id = $request->post('id');
         $model = Brand::findOne(['id'=>$id]);
         $model->is_deleted=1;
-        $model->save();
-        //提示跳转信息
-        \Yii::$app->session->setFlash('success','删除成功');
-        //跳转页面
-        $this->redirect(['brand/index']);
+        $res = $model->save();
+        if ($res){
+            return json_encode([
+                'status'=>0,
+
+            ]);
+        }else{
+            return json_encode([
+                'status'=>1,
+
+            ]);
+        }
     }
 
     //处理上传文件
@@ -164,4 +177,15 @@ class BrandController extends \yii\web\Controller
         }
     }
 
+
+    //过滤器
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::class,
+                //默认情况对所有操作生效
+            ]
+        ];
+    }
 }

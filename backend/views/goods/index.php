@@ -30,7 +30,7 @@
         <th>操作</th>
     </tr>
     <?php foreach ($goods as $good): ?>
-        <tr>
+        <tr delete-id=<?= $good->id ?>>
             <td><?= $good->id ?></td>
             <td><?= $good->sn ?></td>
             <td><?= $good->name ?></td>
@@ -41,9 +41,9 @@
 
                 <a class="btn btn-default" href="photo.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-picture"></span>相册</a>
                 <a class="btn btn-warning" href="edit.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
-                <a class="btn btn-danger" href="delete.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-trash"></span>删除</a>
+                <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
 
-                <a class="btn btn-success" href=""><span class="glyphicon glyphicon-film"></span>预览</a>
+                <a class="btn btn-success" href="preview.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-film"></span>预览</a>
             </td>
         </tr>
     <?php endforeach; ?>
@@ -55,3 +55,28 @@
 echo \yii\widgets\LinkPager::widget([
     'pagination' => $page
 ]);
+
+$this->registerJs(
+    <<<JS
+    $('.delete').click(function() {
+       
+    if(confirm("真的要删除吗?")){
+    var tr = $(this).closest('tr');
+      var id = $(this).closest('tr').attr('delete-id');
+    var data = {
+      'id':id
+    };
+      $.post('delete.html',data,function(arr) {
+        if (arr.status ==0){
+            tr.remove();
+        }
+    },'json');
+  }
+  else{
+  
+  }
+  
+    })
+JS
+
+);

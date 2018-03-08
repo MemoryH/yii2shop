@@ -10,15 +10,15 @@
         <th>操作</th>
     </tr>
     <?php foreach ($brands as $brand):?>
-        <tr>
+        <tr delete-id=<?=$brand->id?>>
             <td><?=$brand->id?></td>
             <td><?=$brand->name?></td>
             <td><?=$brand->intro?></td>
             <td><img src="<?=$brand->logo?>" class="img-circle" width="30px"></td>
             <td><?=$brand->sort?></td>
             <td>
-                <?=\yii\helpers\Html::a('修改',['edit','id'=>$brand->id],['class'=>'btn btn-info'])?>
-                <?=\yii\helpers\Html::a('删除',['brand/delete','id'=>$brand->id],['class'=>'btn btn-info'])?>
+                <a class="btn btn-warning" href="edit.html?id=<?=$brand->id?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
+                <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
             </td>
         </tr>
     <?php endforeach;?>
@@ -27,3 +27,28 @@
 echo \yii\widgets\LinkPager::widget([
     'pagination'=>$page
 ]);
+
+$this->registerJs(
+    <<<JS
+    $('.delete').click(function() {
+       
+    if(confirm("真的要删除吗?")){
+    var tr = $(this).closest('tr');
+      var id = $(this).closest('tr').attr('delete-id');
+    var data = {
+      'id':id
+    };
+      $.post('delete.html',data,function(arr) {
+        if (arr.status ==0){
+            tr.remove();
+        }
+    },'json');
+  }
+  else{
+  
+  }
+  
+    })
+JS
+
+);

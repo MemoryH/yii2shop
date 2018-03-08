@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
 
 class ArticleCategoryController extends \yii\web\Controller
 {
@@ -71,14 +72,28 @@ class ArticleCategoryController extends \yii\web\Controller
         return $this->render('add',['model'=>$model]);
     }
     //文章的删除
-    public function actionDelete($id){
+    public function actionDelete(){
+        //实例化request组件
+        $request = \Yii::$app->request;
+        $id = $request->post('id');
         $model = ArticleCategory::findOne(['id'=>$id]);
         $model->is_deleted=1;
-        $model->save();
+        $res= $model->save();
         //提示跳转信息
-        \Yii::$app->session->setFlash('success','删除成功');
-        //跳转页面
-        $this->redirect(['article-category/index']);
+        if ($res){
+            return json_encode([
+                'status'=>0,
+
+            ]);
+        }else{
+            return json_encode([
+                'status'=>1,
+
+            ]);
+        }
+
     }
+
+
 
 }

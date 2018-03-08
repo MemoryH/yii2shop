@@ -11,7 +11,7 @@
         <th>操作</th>
     </tr>
     <?php foreach ($articles as $article):?>
-        <tr>
+        <tr delete-id=<?=$article->id?>>
             <td><?=$article->id?></td>
             <td><?=$article->name?></td>
             <td><?=$article->intro?></td>
@@ -19,8 +19,8 @@
             <td><?=$article->sort?></td>
             <td><?=date('Y-m-d H:i:s',$article->create_time)?></td>
             <td>
-                <?=\yii\helpers\Html::a('修改',['article/edit','id'=>$article->id],['class'=>'btn btn-info'])?>
-                <?=\yii\helpers\Html::a('删除',['article/delete','id'=>$article->id],['class'=>'btn btn-info'])?>
+                <a class="btn btn-warning" href="edit.html?id=<?=$article->id?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
+                <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
                 <?=\yii\helpers\Html::a('查看',['article/show','id'=>$article->id],['class'=>'btn btn-info'])?>
             </td>
         </tr>
@@ -30,3 +30,28 @@
 echo \yii\widgets\LinkPager::widget([
     'pagination'=>$page
 ]);
+
+$this->registerJs(
+    <<<JS
+    $('.delete').click(function() {
+       
+    if(confirm("真的要删除吗?")){
+    var tr = $(this).closest('tr');
+      var id = $(this).closest('tr').attr('delete-id');
+    var data = {
+      'id':id
+    };
+      $.post('delete.html',data,function(arr) {
+        if (arr.status ==0){
+            tr.remove();
+        }
+    },'json');
+  }
+  else{
+  
+  }
+  
+    })
+JS
+
+);

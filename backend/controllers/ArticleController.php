@@ -9,6 +9,7 @@ use yii\data\Pagination;
 use Qiniu\Auth;
 // 引入上传类
 use Qiniu\Storage\UploadManager;
+use yii\filters\AccessControl;
 
 class ArticleController extends \yii\web\Controller
 {
@@ -89,14 +90,24 @@ class ArticleController extends \yii\web\Controller
     }
 
     //删除页面
-    public function actionDelete($id){
+    public function actionDelete(){
+        //实例化request组件
+        $request = \Yii::$app->request;
+        $id = $request->post('id');
         $model = Article::findOne(['id'=>$id]);
         $model->is_deleted=1;
-        $model->save();
-        //提示跳转信息
-        \Yii::$app->session->setFlash('success','删除成功');
-        //跳转页面
-        $this->redirect(['article/index']);
+        $res = $model->save();
+        if ($res){
+            return json_encode([
+                'status'=>0,
+
+            ]);
+        }else{
+            return json_encode([
+                'status'=>1,
+
+            ]);
+        }
     }
 
     //查看详细内容
@@ -149,5 +160,6 @@ class ArticleController extends \yii\web\Controller
             var_dump($ret);
         }
             }
+
 
 }

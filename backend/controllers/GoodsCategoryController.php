@@ -6,6 +6,7 @@ namespace backend\controllers;
 
 use backend\models\GoodsCategory;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
 
 class GoodsCategoryController extends \yii\web\Controller
 {
@@ -94,31 +95,44 @@ class GoodsCategoryController extends \yii\web\Controller
     }
 
     //商品分类的删除
-    public function actionDelete($id){
+    public function actionDelete(){
+        //实例化request组件
+        $request = \Yii::$app->request;
+        $id = $request->post('id');
         //通过id查询
+//        var_dump($id);exit;
         $model = GoodsCategory::findOne(['id'=>$id]);
+//        var_dump($model);exit;
         //通过delete方法删除根节点时报错
         if($model->parent_id){
-            $model->delete();
+            $res = $model->delete();
         }else{
             //删除根节点及旗下子节点
             $nodes = GoodsCategory::find()->where(['parent_id'=>$model->id])->all();
             if($nodes ==null){
 //                var_dump($nodes);exit;
-                $model->deleteWithChildren();
+                $res = $model->deleteWithChildren();
             }else{
 //                echo 111;exit;
-                \Yii::$app->session->setFlash('warning','根节点不能为空');
+                \Yii::$app->session->setFlash('warning','删除的根节点不为空');
                 return $this->redirect(['goods-category/index']);
 
             }
 
         }
 
-        //设置提示信息
-        \Yii::$app->session->setFlash('success','删除成功');
-        //跳转
-        return $this->redirect(['goods-category/index']);
+        if ($res){
+            return json_encode([
+                'status'=>0,
+
+            ]);
+        }else{
+            return json_encode([
+                'status'=>1,
+
+            ]);
+        }
     }
+
 
 }

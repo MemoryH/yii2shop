@@ -9,6 +9,7 @@ use backend\models\GoodsGallery;
 use backend\models\GoodsIntro;
 use function React\Promise\all;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
 use yii\web\UploadedFile;
 // 引入鉴权类
 use Qiniu\Auth;
@@ -137,15 +138,25 @@ class GoodsController extends \yii\web\Controller
         return $this->render('add', ['goods' => $goods, 'goods_intro' => $goods_intro, 'model' => $model, 'nodes' => json_encode($nodes)]);
     }
     //删除商品
-    public function actionDelete($id){
+    public function actionDelete(){
+        //实例化request组件
+        $request = \Yii::$app->request;
+        $id = $request->post('id');
         //实例化表单
         $good = Goods::findOne(['id'=>$id]);
         $good->status = 0;
-        $good->save();
-        //设置提示信息
-        \Yii::$app->session->setFlash('success','删除成功');
-        //跳转信息
-        return $this->redirect(['goods/index']);
+        $res = $good->save();
+        if ($res){
+            return json_encode([
+                'status'=>0,
+
+            ]);
+        }else{
+            return json_encode([
+                'status'=>1,
+
+            ]);
+        }
     }
     //回收站
     public function actionRecycle(){
@@ -191,15 +202,37 @@ class GoodsController extends \yii\web\Controller
     }
 
     //恢复回收站数据
-    public function actionRecovery($id){
+    public function actionRecovery(){
+
+        //实例化request组件
+        $request = \Yii::$app->request;
+        $id = $request->post('id');
         //实例化表单
+//        var_dump($id);exit;
         $good = Goods::findOne(['id'=>$id]);
         $good->status = 1;
-        $good->save();
-        //设置提示信息
-        \Yii::$app->session->setFlash('success','恢复成功');
-        //跳转信息
-        return $this->redirect(['goods/recycle']);
+        $res = $good->save();
+        if ($res){
+            return json_encode([
+                'status'=>0,
+
+            ]);
+        }else{
+            return json_encode([
+                'status'=>1,
+
+            ]);
+        }
+    }
+    //预览
+    public function actionPreview($id){
+        //实例化数据表
+        $goods = Goods::findOne(['id'=>$id]);
+        $photos = GoodsGallery::find()->where(['goods_id'=>$id])->all();
+//        var_dump($photos);exit;
+        $contents = GoodsIntro::findOne(['goods_id'=>$id]);
+        //加载视图
+        return $this->render('preview',['goods'=>$goods,'photos'=>$photos,'contents'=>$contents]);
     }
 
 
@@ -302,4 +335,5 @@ class GoodsController extends \yii\web\Controller
         //跳转页面
         return $this->redirect(['goods/photo','id'=>$goods_id]);
     }
+
 }

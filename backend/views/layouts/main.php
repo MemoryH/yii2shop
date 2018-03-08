@@ -36,19 +36,27 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => '商品', 'url' => ['/goods/index']],
+        ['label' => '商品分类', 'url' => ['/goods-category/index']],
+        ['label' => '文章', 'url' => ['/article/index']],
+        ['label' => '文章分类', 'url' => ['/article-category/index']],
+        ['label' => '品牌', 'url' => ['/brand/index']],
+        ['label' => '用户', 'url' => ['/admin/index']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => '登录', 'url' => ['/login/login']];
     } else {
         $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
+            . Html::beginForm(['/login/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                '注销 (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
             . '</li>';
+
+        $menuItems[] = ['label' => '修改密码', 'url' => ['/admin/password','id'=>Yii::$app->user->id]];
+//    <?=$admin->id==Yii::$app->user->id?"<a class='btn btn-warning' href='password.html?id=$admin->id'><span class='glyphicon glyphicon-edit'></span>修改密码</a>":''
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
