@@ -35,14 +35,12 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => '商品', 'url' => ['/goods/index']],
-        ['label' => '商品分类', 'url' => ['/goods-category/index']],
-        ['label' => '文章', 'url' => ['/article/index']],
-        ['label' => '文章分类', 'url' => ['/article-category/index']],
-        ['label' => '品牌', 'url' => ['/brand/index']],
-        ['label' => '用户', 'url' => ['/admin/index']],
-    ];
+
+
+
+    $menuItems = \backend\models\Menu::getMenu();
+//    var_dump($parenst);var_dump($menuItems);exit;
+//    var_dump($parents); var_dump($menuItems);exit;
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登录', 'url' => ['/login/login']];
     } else {

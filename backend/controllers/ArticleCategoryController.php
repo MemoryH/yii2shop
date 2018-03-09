@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -16,7 +17,7 @@ class ArticleCategoryController extends \yii\web\Controller
         //获取总页数
         $page->totalCount = ArticleCategory::find()->count();
         //设置每页显示的条数
-        $page->defaultPageSize = 2;
+        $page->defaultPageSize = 10;
         //分页语句
         $model = ArticleCategory::find()->offset($page->offset)->where(['is_deleted'=>0])->limit($page->limit)->all();
         return $this->render('index',['models'=>$model,'page'=>$page]);
@@ -94,6 +95,15 @@ class ArticleCategoryController extends \yii\web\Controller
 
     }
 
-
+//过滤器
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::class,
+                //默认情况对所有操作生效
+            ]
+        ];
+    }
 
 }

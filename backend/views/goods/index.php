@@ -1,4 +1,3 @@
-<a href="<?= \yii\helpers\Url::to(['goods/add']) ?>" class="btn btn-primary">添加</a>
 <form id="w0" class="form-inline" action="" method="get" role="form">
     <div class="form-group field-goodssearchform-name">
         <input type="text" id="goodssearchform-name" class="form-control" name="SearchForm[name]"
@@ -38,10 +37,15 @@
             <td><?= $good->stock ?></td>
             <td><img src="<?= $good->logo ?>" class="img-circle" width="30px"></td>
             <td>
-
+        <?php if (Yii::$app->user->can('goods/photo')):?>
                 <a class="btn btn-default" href="photo.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-picture"></span>相册</a>
+            <?php endif;?>
+                <?php if (Yii::$app->user->can('goods/edit')):?>
                 <a class="btn btn-warning" href="edit.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
+                <?php endif;?>
+                <?php if (Yii::$app->user->can('goods/delete')):?>
                 <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
+                <?php endif;?>
 
                 <a class="btn btn-success" href="preview.html?id=<?=$good->id?>"><span class="glyphicon glyphicon-film"></span>预览</a>
             </td>

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Admin;
 use backend\models\EditPasswordForm;
 use yii\data\Pagination;
@@ -22,7 +23,7 @@ class AdminController extends \yii\web\Controller
         //分页的总条数
         $page->totalCount = Admin::find()->count();
         //每页显示的条数
-        $page->defaultPageSize = 2;
+        $page->defaultPageSize = 10;
         //分页语句
         $admins = Admin::find()->offset($page->offset)->limit($page->limit)->all();
         return $this->render('index',['admins'=>$admins,'page'=>$page]);
@@ -201,6 +202,18 @@ class AdminController extends \yii\web\Controller
 //        $id = \Yii::$app->user->id;
 //        var_dump($id);exit;
 //    }
+//过滤器
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::class,
+                //默认情况对所有操作生效
+                'except'=>['password']
+            ],
+
+        ];
+    }
 
 
 }

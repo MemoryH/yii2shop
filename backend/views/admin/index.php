@@ -1,5 +1,4 @@
 
-<a href="<?=\yii\helpers\Url::to(['admin/add'])?>" class="btn btn-primary">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -23,10 +22,12 @@
             <td><?=date('Y-m-d H:i:s',$admin->last_login_time)?></td>
             <td><?=$admin->last_login_ip?></td>
             <td>
+                <?php if (Yii::$app->user->can('admin/edit')):?>
                 <a class="btn btn-warning" href="edit.html?id=<?=$admin->id?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
+                    <?php endif;?>
+                <?php if (Yii::$app->user->can('admin/delete')):?>
                 <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
-
-
+                <?php endif;?>
             </td>
         </tr>
     <?php endforeach;?>

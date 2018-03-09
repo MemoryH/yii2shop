@@ -185,7 +185,9 @@ class BrandController extends \yii\web\Controller
             'rbac'=>[
                 'class'=>RbacFilter::class,
                 //默认情况对所有操作生效
-            ]
+                'except'=>['logo']
+            ],
+
         ];
     }
 }

@@ -1,5 +1,4 @@
 
-<a href="<?=\yii\helpers\Url::to(['article/add'])?>" class="btn btn-primary">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -19,8 +18,12 @@
             <td><?=$article->sort?></td>
             <td><?=date('Y-m-d H:i:s',$article->create_time)?></td>
             <td>
+        <?php if (Yii::$app->user->can('article/edit')):?>
                 <a class="btn btn-warning" href="edit.html?id=<?=$article->id?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
+            <?php endif;?>
+                <?php if (Yii::$app->user->can('article/delete')):?>
                 <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
+                <?php endif;?>
                 <?=\yii\helpers\Html::a('查看',['article/show','id'=>$article->id],['class'=>'btn btn-info'])?>
             </td>
         </tr>

@@ -9,6 +9,7 @@
 namespace backend\controllers;
 
 
+use backend\filters\RbacFilter;
 use backend\models\PermissionForm;
 use backend\models\RoleForm;
 use yii\web\Controller;
@@ -246,5 +247,16 @@ class RbacController extends Controller
         //加载视图
         return $this->render('add-role',['model'=>$model,'permissions'=>$permissions]);
 
+    }
+
+    //过滤器
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::class,
+                //默认情况对所有操作生效
+            ]
+        ];
     }
 }

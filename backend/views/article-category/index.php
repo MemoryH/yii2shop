@@ -1,5 +1,4 @@
 
-<a href="<?=\yii\helpers\Url::to(['article-category/add'])?>" class="btn btn-primary">添加</a>
 <table class="table table-bordered">
     <tr>
         <th>ID</th>
@@ -15,8 +14,12 @@
             <td><?=$model->intro?></td>
             <td><?=$model->sort?></td>
             <td>
+        <?php if (Yii::$app->user->can('article-category/edit')):?>
                 <a class="btn btn-warning" href="edit.html?id=<?=$model->id?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
+            <?php endif;?>
+                <?php if (Yii::$app->user->can('article-category/delete')):?>
                 <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
+                <?php endif;?>
             </td>
         </tr>
     <?php endforeach;?>

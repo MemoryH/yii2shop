@@ -1,6 +1,5 @@
 
 
-<a href="<?=\yii\helpers\Url::to(['rbac/add-role'])?>" class="btn btn-primary">添加</a>
 
 <table id="table_id_example" class="display">
     <thead>
@@ -16,8 +15,12 @@
             <td><?=$role->name?></td>
             <td><?=$role->description?></td>
             <td>
+        <?php if (Yii::$app->user->can('rbac/role-edit')):?>
                 <a class="btn btn-warning" href="role-edit.html?name=<?=$role->name?>"><span class="glyphicon glyphicon-edit"></span>编辑</a>
+            <?php endif;?>
+                <?php if (Yii::$app->user->can('rbac/role-delete')):?>
                 <a class="btn btn-danger delete" href="#"><span class="glyphicon glyphicon-trash"></span>删除</a>
+                <?php endif;?>
             </td>
         </tr>
     <?php endforeach;?>

@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 
 
+use backend\filters\RbacFilter;
 use backend\models\GoodsCategory;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -132,6 +133,17 @@ class GoodsCategoryController extends \yii\web\Controller
 
             ]);
         }
+    }
+
+    //过滤器
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::class,
+                //默认情况对所有操作生效
+            ]
+        ];
     }
 
 
