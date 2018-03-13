@@ -32,7 +32,7 @@
         <tr delete-id=<?= $good->id ?>>
             <td><?= $good->id ?></td>
             <td><?= $good->sn ?></td>
-            <td><?= $good->name ?></td>
+            <td><?= mb_substr($good->name,0,20).'.....' ?></td>
             <td><?= $good->shop_price ?></td>
             <td><?= $good->stock ?></td>
             <td><img src="<?= $good->logo ?>" class="img-circle" width="30px"></td>

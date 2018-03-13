@@ -91,11 +91,11 @@
                         <label for="">手机号码：</label>
                         <input type="text" class="txt" value="" name="tel" id="tel" placeholder=""/>
                     </li>
-<!--                    <li>-->
-<!--                        <label for="">验证码：</label>-->
-<!--                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="captcha" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>-->
-<!---->
-<!--                    </li>-->
+                    <li>
+                        <label for="">手机验证码：</label>
+                        <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="code" disabled="disabled" id="code"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
+
+                    </li>
                     <li class="checkcode">
                         <label for="">验证码：</label>
                         <input type="text"  name="captcha" />
@@ -170,6 +170,19 @@
 
                 },
                 captcha:"validateCaptcha",
+                code: {
+                    required: true,
+                    remote: {
+                        url: "verification.html",     //后台处理程序
+                        type: "get",               //数据发送方式
+                        //dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            tel: function() {
+                                return $("#tel").val();
+                            }
+                        }
+                    }
+                },
                 password: {
                     required: true,
                     minlength: 5,
@@ -209,6 +222,7 @@
                     equalTo: "两次密码输入不一致"
                 },
                 email: {
+                    required: '请输入一个邮箱',
                     email:"请输入一个正确的邮箱",
                     remote:"邮箱已存在"
 
@@ -216,6 +230,11 @@
                 tel: {
                     required: "请输入手机号码",
                     minlength: '请输入正确的手机号',
+                },
+                code: {
+                    required: "请输入手机验证码",
+                    minlength: '请输入正确的手机验证码',
+                    remote:"手机验证码错误"
                 }
             },
             errorElement:'span'
@@ -223,9 +242,9 @@
     });
     function bindPhoneNum(){
         //启用输入框
-        $('#captcha').prop('disabled',false);
+        $('#code').prop('disabled',false);
 
-        var time=30;
+        var time=60;
         var interval = setInterval(function(){
             time--;
             if(time<=0){
@@ -240,6 +259,15 @@
             $('#get_captcha').val(html);
         },1000);
     }
+    $('#get_captcha').click(function () {
+        var tel = $('#tel').val();
+        var data = {
+            'tel':tel
+        }
+        $.get('verify.html',data,function (arr) {
+            console.log(arr);
+        })
+    })
 
     $("#change_captcha").click(function () {
         //获取新验证码图片的url

@@ -23,7 +23,7 @@ class m180309_032320_create_member_table extends Migration
 //email	varchar(100)	邮箱
             'email'=>$this->string(100)->notNull()->comment('邮箱'),
 //tel	char(11)	电话
-            'tel'=>$this->char(11)->notNull()->comment('电话号码'),
+            'tel'=>$this->char(12)->notNull()->comment('电话号码'),
 //last_login_time	int	最后登录时间
             'last_login_time'=>$this->integer()->comment('最后登录时间'),
 //last_login_ip	int	最后登录ip

@@ -5,6 +5,7 @@
 */
 
 $(function(){
+
 	
 	//减少
 	$(".reduce_num").click(function(){
@@ -12,7 +13,9 @@ $(function(){
 		if (parseInt($(amount).val()) <= 1){
 			alert("商品数量最少为1");
 		} else{
+            // console.log(1);
 			$(amount).val(parseInt($(amount).val()) - 1);
+
 		}
 		//小计
 		var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(amount).val());
@@ -24,6 +27,9 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+        edit($(this).closest('tr').attr('edit-id'),$(amount).val());
+
+
 	});
 
 	//增加
@@ -40,6 +46,7 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+        edit($(this).closest('tr').attr('edit-id'),$(amount).val());
 	});
 
 	//直接输入
@@ -58,6 +65,22 @@ $(function(){
 		});
 
 		$("#total").text(total.toFixed(2));
+        edit($(this).closest('tr').attr('edit-id'),$(this).val());
 
 	});
+
+	$('.delete').click(function () {
+		var amount = 0;
+        // edit($(this).closest('tr').attr('edit-id'),amount);
+		var tr = $(this).closest('tr')
+        $.get("/goods/edit.html",{goods_id:tr.attr('edit-id'),amount:amount},function (arr) {
+			if (arr == 'success'){
+                tr.remove();
+			}
+        });
+    })
+
 });
+function edit(goods_id,amount){
+    $.get("/goods/edit.html",{goods_id:goods_id,amount:amount});
+}

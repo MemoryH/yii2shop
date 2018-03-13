@@ -42,7 +42,7 @@ class Goods extends \yii\db\ActiveRecord
             [['name', 'goods_category_id', 'brand_id'], 'required'],
             [['goods_category_id', 'brand_id', 'stock', 'is_on_sale', 'status', 'sort', 'create_time', 'view_times'], 'integer'],
             [['market_price', 'shop_price'], 'number'],
-            [['name', 'sn'], 'string', 'max' => 20],
+            [['name', 'sn'], 'string', 'max' => 255],
             [['logo'], 'string', 'max' => 255],
         ];
     }
