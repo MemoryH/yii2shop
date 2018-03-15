@@ -71,3 +71,5 @@ input[type='radio']{position: relative; top:2px; margin-right: 2px;}
 .fillin_ft a{float: right; display: inline; width: 135px; height: 36px; background: url("../images/order_btn.jpg") 0 0 no-repeat; vertical-align: middle; margin: 7px 10px 0;}
 .fillin_ft a span{display: none;}
 .fillin_ft a:hover{background-position: 0 -36px;}
+
+.fillin_ft button{float: right; display: inline; width: 135px; height: 36px; background: url("../images/order_btn.jpg") 0 0 no-repeat; vertical-align: middle; margin: 7px 10px 0;}

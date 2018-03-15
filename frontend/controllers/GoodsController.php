@@ -90,7 +90,8 @@ class GoodsController extends \yii\web\Controller
             }else{
                 $carts = [];
             }
-        }else{
+        }
+        else{
             $cartss = Cart::find()->where(['member_id'=>\Yii::$app->user->id])->asArray()->all();
 //            var_dump($carts);exit;
             $carts = [];
