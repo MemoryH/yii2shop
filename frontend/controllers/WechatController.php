@@ -11,7 +11,7 @@ class WechatController extends Controller{
         $appid ="wxafc99f9fa69e174d";
 //        $redirect_uri = url('wechat/redi','',true,true);
         $redirect_uri = Url::to('wechat/redi',true).".html";
-        var_dump($redirect_uri);exit;
+//        var_dump($redirect_uri);exit;
 //        var_dump($redirect_uri);exit;
         $scope="snsapi_userinfo";
 
