@@ -10,8 +10,8 @@ class WechatController extends Controller{
 
         $appid ="wxafc99f9fa69e174d";
 //        $redirect_uri = url('wechat/redi','',true,true);
-        $redirect_uri = Url::to('wechat/redi',true);
-//        var_dump($redirect_uri);exit;
+        $redirect_uri = Url::to('wechat/redi',true).".html";
+        var_dump($redirect_uri);exit;
 //        var_dump($redirect_uri);exit;
         $scope="snsapi_userinfo";
 
@@ -28,6 +28,7 @@ class WechatController extends Controller{
 
 
         $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$secret}&code=$code&grant_type=authorization_code";
-        
+        $json = file_get_contents($url);
+        var_dump($json);
     }
 }
