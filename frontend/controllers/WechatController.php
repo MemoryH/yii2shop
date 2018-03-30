@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\Request;
 
 class WechatController extends Controller{
     public function actionOauth2(){
@@ -19,8 +20,14 @@ class WechatController extends Controller{
         $this->redirect($url);
     }
 
-    public function redi(){
-        $code = request()->get('code');
-        var_dump($code);
+    public function actionRedi(){
+        $request = new Request();
+        $appid ="wxafc99f9fa69e174d";
+        $secret = "7df714c21e8a857d5d6e151a4c62a359";
+        $code = $request->get('code');
+
+
+        $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$secret}&code=$code&grant_type=authorization_code";
+        
     }
 }
