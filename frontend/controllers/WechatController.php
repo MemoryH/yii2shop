@@ -29,6 +29,6 @@ class WechatController extends Controller{
 
         $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$secret}&code=$code&grant_type=authorization_code";
         $json = file_get_contents($url);
-        var_dump($json);
+        var_dump($json['openid']);
     }
 }
